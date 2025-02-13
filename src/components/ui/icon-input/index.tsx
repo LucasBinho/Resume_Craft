@@ -23,7 +23,7 @@ export const IconInput = ({ value, onChange, placeholder }: IconInputProps) => {
       <div className="w-8 h-8 min-w-8 rounded-full bg-white p-1.5">
         {/* [TOSEE/] */}
         <img
-          src={`/assets/img/${value}.svg`}
+          src={`/images/${value}.svg`}
           className="w-full h-full object-contain"
         />
       </div>

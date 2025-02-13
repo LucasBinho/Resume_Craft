@@ -3,10 +3,15 @@ import { BicepsFlexed, BriefcaseBusiness, FileBadge2, Globe, GraduationCap, Lang
 import { Fragment, useState } from "react";
 import { MultipleDragItemData, MultipleDragList } from "./multiple-drag-list";
 import { ManageMultipleItemDialog } from "./multiple-drag-list/manage-multiple-item-dialog";
+import { useFormContext } from "react-hook-form";
 
 export const MultiplesSections = () => {
 
+  const { getValues } = useFormContext();
+
   const [sectionToAdd, setSectionToAdd] = useState<MultipleDragItemData | null>(null);
+
+  const [initialData, setInitialData] = useState<MultipleDragItemData | null>(null);
 
   const sectionsKeys: MultipleDragItemData[] = [
     {
@@ -60,26 +65,40 @@ export const MultiplesSections = () => {
     },
   ];
 
+  const onEdit = (section: MultipleDragItemData, index: number) => {
+    const currentValues = getValues();
+    const currentItems = currentValues.content[section.formKey];
+
+    // secao que abre o modal
+    setSectionToAdd(section);
+
+    // pego o item atual na posicao index, e defino como inital data
+    setInitialData(currentItems[index]);
+  }
+
   return (
     <div>
         {sectionsKeys.map((section) => (
             <Fragment key={`multiple-section-${section.title}`}>
+              
                 <Separator className="my-5" />
 
                 <MultipleDragList 
                     data={section}
                     onAdd={() => setSectionToAdd(section)}
-                    onEdit={() => {}}
+                    onEdit={(index) => onEdit(section, index)}
                 />
             </Fragment>
         ))}
 
         {sectionToAdd && (
           <ManageMultipleItemDialog
+            initialData={initialData}
             data={sectionToAdd}
             open={!!sectionToAdd}
             setOpen={(value) => {
               if(!value) setSectionToAdd(null);
+              setInitialData(null);
             }}
           />
         )}

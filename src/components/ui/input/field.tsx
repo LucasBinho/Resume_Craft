@@ -1,4 +1,4 @@
-import { ComponentProps } from "react"
+import { ComponentProps, ReactNode } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import { Input } from "."
 import { FieldWrapper } from "../field-wrapper";
@@ -7,9 +7,10 @@ type InputFieldProps = ComponentProps<typeof Input> & {
     label: string;
     name: string;
     containerClassName?: string;
+    extraContent?: (value: string) => ReactNode;
 }
 
-export const InputField = ({ label, name, required, containerClassName, ...props }: InputFieldProps) => {
+export const InputField = ({ label, name, required, containerClassName, extraContent, ...props }: InputFieldProps) => {
     const { control } = useFormContext();
 // pega dados externos do componente usando apide contextos do react
 
@@ -23,6 +24,7 @@ export const InputField = ({ label, name, required, containerClassName, ...props
             render={({ field, fieldState }) => (
                 <FieldWrapper label={label} className={containerClassName} error={fieldState?.error}>
                     <Input {...props} {...field} />
+                    {extraContent && extraContent(field.value)}
                 </FieldWrapper>
             )}
         />
